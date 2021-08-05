@@ -15,6 +15,12 @@
     <!-- this is the service object that we want to make transactional -->
     <bean id="fooService" class="x.y.service.DefaultFooService"/>
 
+    <!-- Definition for studentJDBCTemplate bean -->
+    <bean id = "studentJDBCTemplate"
+          class = "x.y.StudentJDBCTemplate">
+        <property name = "dataSource" ref = "dataSource"/>
+    </bean>
+
     <!-- the transactional advice (what 'happens'; see the <aop:advisor/> bean below) -->
     <tx:advice id="txAdvice" transaction-manager="transactionManager">
         <!-- the transactional semantics... -->
@@ -28,9 +34,15 @@
 
     <!-- ensure that the above transactional advice runs for any execution
       of an operation defined by the FooService interface -->
-    <aop:config>
+<!--    <aop:config>
         <aop:pointcut id="fooServiceOperation" expression="execution(* x.y.service.FooService.*(..))"/>
         <aop:advisor advice-ref="txAdvice" pointcut-ref="fooServiceOperation"/>
+
+    </aop:config>-->
+
+    <aop:config>
+        <aop:pointcut  id = "createOperation" expression = "execution(* x.y.StudentJDBCTemplate.create*(String,..))"/>
+        <aop:advisor advice-ref = "txAdvice" pointcut-ref = "createOperation"/>
     </aop:config>
 
     <!-- don't forget the DataSource -->
@@ -40,11 +52,6 @@
           class = "org.springframework.jdbc.datasource.DriverManagerDataSource">
         <!-- <property name = "driverClassName" value = "com.mysql.jdbc.Driver"/> -->
         <property name = "driverClassName" value = "org.postgresql.Driver"/>
-
-        <!--        spring.datasource.url=jdbc:postgresql://localhost:5432/demo2
-                spring.datasource.username=postgres
-                spring.datasource.password=password-->
-
         <property name = "url" value = "jdbc:postgresql://localhost:5432/demo2"/>
         <property name = "username" value = "postgres"/>
         <property name = "password" value = "password"/>
