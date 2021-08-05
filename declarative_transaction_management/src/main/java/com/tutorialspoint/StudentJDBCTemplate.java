@@ -5,7 +5,7 @@ import javax.sql.DataSource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-public class StudentJDBCTemplate implements StudentDAO {
+public class StudentJDBCTemplate /*implements StudentDAO*/ {
     private JdbcTemplate jdbcTemplateObject;
 
     public void setDataSource(DataSource dataSource) {
@@ -26,7 +26,7 @@ public class StudentJDBCTemplate implements StudentDAO {
             System.out.println("Created Name = " + name + ", Age = " + age);
 
             // to simulate the exception.
-            throw new RuntimeException("simulate Error condition") ;
+            //throw new RuntimeException("simulate Error condition") ;
         }
         catch (DataAccessException e) {
             System.out.println("Error in creating record, rolling back");
